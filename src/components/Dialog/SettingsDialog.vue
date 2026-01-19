@@ -15,44 +15,41 @@
         <v-radio-group v-model="extensionMode.data.value" hide-details>
           <v-radio
             value="enabled"
-            :label="msg.extensionModeEnabled"
             color="primary"
           >
             <template #label>
-              <ToggleLabel>
+              <Text>
                 {{ msg.extensionModeEnabled }}
                 <template #secondary>
                   {{ msg.extensionModeEnabledDescription }}
                 </template>
-              </ToggleLabel>
+              </Text>
             </template>
           </v-radio>
           <v-radio
             value="manual"
-            :label="msg.extensionModeManual"
             color="primary"
           >
             <template #label>
-              <ToggleLabel>
+              <Text>
                 {{ msg.extensionModeManual }}
                 <template #secondary>
                   {{ msg.extensionModeManualDescription }}
                 </template>
-              </ToggleLabel>
+              </Text>
             </template>
           </v-radio>
           <v-radio
             value="disabled"
-            :label="msg.extensionModeDisabled"
             color="primary"
           >
             <template #label>
-              <ToggleLabel>
+              <Text>
                 {{ msg.extensionModeDisabled }}
                 <template #secondary>
                   {{ msg.extensionModeDisabledDescription }}
                 </template>
-              </ToggleLabel>
+              </Text>
             </template>
           </v-radio>
         </v-radio-group>
@@ -70,30 +67,28 @@
         <v-radio-group v-model="clickAction.data.value" hide-details>
           <v-radio
             value="open-popup"
-            :label="msg.clickActionOpenPopup"
             color="primary"
           >
             <template #label>
-              <ToggleLabel>
+              <Text>
                 {{ msg.clickActionOpenPopup }}
                 <template #secondary>
                   {{ msg.clickActionOpenPopupDescription }}
                 </template>
-              </ToggleLabel>
+              </Text>
             </template>
           </v-radio>
           <v-radio
             value="toggle-mode"
-            :label="msg.clickActionToggleMode"
             color="primary"
           >
             <template #label>
-              <ToggleLabel>
+              <Text>
                 {{ msg.clickActionToggleMode }}
                 <template #secondary>
                   {{ msg.clickActionToggleModeDescription }}
                 </template>
-              </ToggleLabel>
+              </Text>
             </template>
           </v-radio>
         </v-radio-group>
@@ -131,7 +126,6 @@ import { ref } from 'vue'
 import Card from '@/components/Card/Card.vue'
 import CardSection from '@/components/Card/CardSection.vue'
 import NavigationCardSection from '@/components/Card/NavigationCardSection.vue'
-import ToggleLabel from '@/components/Form/ToggleLabel.vue'
 import LabelText from '@/components/LabelText.vue'
 import Text from '@/components/Text.vue'
 import OverlayDialog from './OverlayDialog.vue'

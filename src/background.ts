@@ -128,22 +128,25 @@ function shouldPerformAutoGrouping(): boolean {
 /**
  * Update the extension badge to reflect the current mode
  */
-function updateBadge() {
+async function updateBadge() {
   const mode = extensionMode.data.value
   
   if (mode === 'disabled') {
-    chrome.action.setBadgeText({ text: 'OFF' })
-    chrome.action.setBadgeBackgroundColor({ color: '#da3025' })
+    await chrome.action.setBadgeText({ text: 'OFF' })
+    await chrome.action.setBadgeBackgroundColor({ color: '#da3025' })
   } else if (mode === 'manual') {
-    chrome.action.setBadgeText({ text: 'M' })
-    chrome.action.setBadgeBackgroundColor({ color: '#f9ab04' })
+    await chrome.action.setBadgeText({ text: 'M' })
+    await chrome.action.setBadgeBackgroundColor({ color: '#f9ab04' })
   } else {
-    chrome.action.setBadgeText({ text: '' })
+    await chrome.action.setBadgeText({ text: '' })
   }
 }
 
 // Update badge when mode changes
-watch(extensionMode.data, updateBadge, { immediate: true })
+watch(extensionMode.data, () => {
+  // oxlint-disable-next-line @typescript-eslint/no-floating-promises
+  updateBadge()
+}, { immediate: true })
 
 const groupCreationTracker = new GroupCreationTracker()
 
@@ -745,7 +748,7 @@ when(groupConfigurations.loaded)
     )
 
     // Add idle detection for manual mode
-    chrome.idle.onStateChanged.addListener(async (state: chrome.idle.IdleState) => {
+    chrome.idle.onStateChanged.addListener(async (state: 'active' | 'idle' | 'locked') => {
       if (extensionMode.data.value === 'manual' && state === 'idle') {
         console.debug('System went idle in manual mode, grouping tabs...')
         await groupAllAppropriateTabs()
