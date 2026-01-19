@@ -130,7 +130,7 @@ function shouldPerformAutoGrouping(): boolean {
  */
 async function updateBadge() {
   const mode = extensionMode.data.value
-  
+
   if (mode === 'disabled') {
     await chrome.action.setBadgeText({ text: 'OFF' })
     await chrome.action.setBadgeBackgroundColor({ color: '#da3025' })
@@ -143,10 +143,14 @@ async function updateBadge() {
 }
 
 // Update badge when mode changes
-watch(extensionMode.data, () => {
-  // oxlint-disable-next-line @typescript-eslint/no-floating-promises
-  updateBadge()
-}, { immediate: true })
+watch(
+  extensionMode.data,
+  () => {
+    // oxlint-disable-next-line @typescript-eslint/no-floating-promises
+    updateBadge()
+  },
+  { immediate: true },
+)
 
 const groupCreationTracker = new GroupCreationTracker()
 
@@ -677,11 +681,9 @@ when(groupConfigurations.loaded)
         // Skip grouping if extension is disabled
         if (!shouldPerformAutoGrouping()) return
 
-        // In manual mode, only process URL changes (not automatic grouping)
-        // We'll handle manual mode grouping separately via idle detection
+        // In manual mode, skip automatic grouping on URL changes
         const isManualMode = extensionMode.data.value === 'manual'
         if (isManualMode && update.changes.url) {
-          // In manual mode, skip automatic grouping on URL changes
           return
         }
 
@@ -769,9 +771,9 @@ when(groupConfigurations.loaded)
 
 chrome.action.onClicked.addListener(async () => {
   console.debug('Trigger extension action')
-  
+
   const action = clickAction.data.value
-  
+
   if (action === 'toggle-mode') {
     // Toggle between enabled and disabled
     const currentMode = extensionMode.data.value
@@ -787,13 +789,13 @@ chrome.action.onClicked.addListener(async () => {
     // Default behavior: open popup
     // Since we can't programmatically open the popup, we'll open it as a small window
     const popupUrl = chrome.runtime.getURL('index.html?context=popup')
-    
+
     // Try to find an existing popup window
     const windows = await chrome.windows.getAll({ windowTypes: ['popup'] })
     const existingPopup = windows.find(w => {
       return w.type === 'popup' && w.tabs?.some(t => t.url?.includes('context=popup'))
     })
-    
+
     if (existingPopup) {
       // Focus existing popup
       await chrome.windows.update(existingPopup.id!, { focused: true })
