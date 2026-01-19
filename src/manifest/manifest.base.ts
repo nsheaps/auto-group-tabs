@@ -15,8 +15,6 @@ export default {
     open_in_tab: false,
     page: 'index.html?context=options',
   },
-  action: {
-    default_popup: 'index.html?context=popup',
-  },
-  permissions: ['tabs', 'tabGroups', 'storage'],
+  action: {},
+  permissions: ['tabs', 'tabGroups', 'storage', 'idle'],
 }

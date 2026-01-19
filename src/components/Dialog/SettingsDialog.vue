@@ -5,6 +5,97 @@
     </template>
 
     <Card>
+      <CardSection class="mode-card-section">
+        <LabelText>
+          {{ msg.settingsExtensionModeTitle }}
+          <template #secondary>
+            {{ msg.settingsExtensionModeSubtitle }}
+          </template>
+        </LabelText>
+        <v-radio-group v-model="extensionMode.data.value" hide-details>
+          <v-radio
+            value="enabled"
+            color="primary"
+          >
+            <template #label>
+              <Text>
+                {{ msg.extensionModeEnabled }}
+                <template #secondary>
+                  {{ msg.extensionModeEnabledDescription }}
+                </template>
+              </Text>
+            </template>
+          </v-radio>
+          <v-radio
+            value="manual"
+            color="primary"
+          >
+            <template #label>
+              <Text>
+                {{ msg.extensionModeManual }}
+                <template #secondary>
+                  {{ msg.extensionModeManualDescription }}
+                </template>
+              </Text>
+            </template>
+          </v-radio>
+          <v-radio
+            value="disabled"
+            color="primary"
+          >
+            <template #label>
+              <Text>
+                {{ msg.extensionModeDisabled }}
+                <template #secondary>
+                  {{ msg.extensionModeDisabledDescription }}
+                </template>
+              </Text>
+            </template>
+          </v-radio>
+        </v-radio-group>
+      </CardSection>
+    </Card>
+
+    <Card>
+      <CardSection class="mode-card-section">
+        <LabelText>
+          {{ msg.settingsClickActionTitle }}
+          <template #secondary>
+            {{ msg.settingsClickActionSubtitle }}
+          </template>
+        </LabelText>
+        <v-radio-group v-model="clickAction.data.value" hide-details>
+          <v-radio
+            value="open-popup"
+            color="primary"
+          >
+            <template #label>
+              <Text>
+                {{ msg.clickActionOpenPopup }}
+                <template #secondary>
+                  {{ msg.clickActionOpenPopupDescription }}
+                </template>
+              </Text>
+            </template>
+          </v-radio>
+          <v-radio
+            value="toggle-mode"
+            color="primary"
+          >
+            <template #label>
+              <Text>
+                {{ msg.clickActionToggleMode }}
+                <template #secondary>
+                  {{ msg.clickActionToggleModeDescription }}
+                </template>
+              </Text>
+            </template>
+          </v-radio>
+        </v-radio-group>
+      </CardSection>
+    </Card>
+
+    <Card>
       <TransferDialog>
         <template #activator="{ props: activatorProps }">
           <NavigationCardSection v-bind="activatorProps">
@@ -33,16 +124,23 @@
 import { ref } from 'vue'
 
 import Card from '@/components/Card/Card.vue'
+import CardSection from '@/components/Card/CardSection.vue'
 import NavigationCardSection from '@/components/Card/NavigationCardSection.vue'
+import LabelText from '@/components/LabelText.vue'
 import Text from '@/components/Text.vue'
 import OverlayDialog from './OverlayDialog.vue'
 import TransferDialog from './TransferDialog.vue'
+
+import { useExtensionMode, useClickAction } from '@/composables'
 
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
 const step = ref('base')
+
+const extensionMode = useExtensionMode()
+const clickAction = useClickAction()
 
 function reloadRuntime() {
   chrome.runtime.sendMessage('reload')
@@ -57,5 +155,11 @@ function close() {
 <style scoped>
 .settings-dialog {
   background-color: var(--dimmed-background);
+}
+
+.mode-card-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>

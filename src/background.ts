@@ -6,6 +6,8 @@ import {
   useGroupConfigurations,
   ignoreChromeRuntimeEvents,
   useChromeState,
+  useExtensionMode,
+  useClickAction,
 } from '@/composables'
 import * as conflictManager from '@/util/conflict-manager'
 import {
@@ -20,6 +22,8 @@ import { when } from '@/util/when'
 ignoreChromeRuntimeEvents.value = true
 
 const groupConfigurations = useGroupConfigurations()
+const extensionMode = useExtensionMode()
+const clickAction = useClickAction()
 
 const chromeState = useChromeState()
 
@@ -113,6 +117,40 @@ function getGroupConfigurationForTab(tab: chrome.tabs.Tab) {
   // No matching group found
   return
 }
+
+/**
+ * Check if automatic grouping should be performed based on the current extension mode
+ */
+function shouldPerformAutoGrouping(): boolean {
+  return extensionMode.data.value !== 'disabled'
+}
+
+/**
+ * Update the extension badge to reflect the current mode
+ */
+async function updateBadge() {
+  const mode = extensionMode.data.value
+
+  if (mode === 'disabled') {
+    await chrome.action.setBadgeText({ text: 'OFF' })
+    await chrome.action.setBadgeBackgroundColor({ color: '#da3025' })
+  } else if (mode === 'manual') {
+    await chrome.action.setBadgeText({ text: 'M' })
+    await chrome.action.setBadgeBackgroundColor({ color: '#f9ab04' })
+  } else {
+    await chrome.action.setBadgeText({ text: '' })
+  }
+}
+
+// Update badge when mode changes
+watch(
+  extensionMode.data,
+  () => {
+    // oxlint-disable-next-line @typescript-eslint/no-floating-promises
+    updateBadge()
+  },
+  { immediate: true },
+)
 
 const groupCreationTracker = new GroupCreationTracker()
 
@@ -316,6 +354,12 @@ async function ungroupAppropriateTabs(tabs: chrome.tabs.Tab[]) {
 }
 
 async function groupAllAppropriateTabs() {
+  // Skip grouping if extension is disabled
+  if (!shouldPerformAutoGrouping()) {
+    console.debug('Auto-grouping is disabled, skipping')
+    return
+  }
+
   const assignedTabIds = new Set<number>()
 
   for (const {
@@ -634,6 +678,15 @@ when(groupConfigurations.loaded)
         if (chromeState.tabs.detachedTabs.value.includes(update.tab.id!)) return
         if (draggingTabs.has(update.tab.id!)) return
 
+        // Skip grouping if extension is disabled
+        if (!shouldPerformAutoGrouping()) return
+
+        // In manual mode, skip automatic grouping on URL changes
+        const isManualMode = extensionMode.data.value === 'manual'
+        if (isManualMode && update.changes.url) {
+          return
+        }
+
         const removedFromTabGroup =
           update.changes.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE
         if (!update.changes.url && !removedFromTabGroup) return
@@ -695,6 +748,22 @@ when(groupConfigurations.loaded)
         }
       },
     )
+
+    // Add idle detection for manual mode
+    chrome.idle.onStateChanged.addListener(async (state: 'active' | 'idle' | 'locked') => {
+      if (extensionMode.data.value === 'manual' && state === 'idle') {
+        console.debug('System went idle in manual mode, grouping tabs...')
+        await groupAllAppropriateTabs()
+      }
+    })
+
+    // Add tab activation listener for manual mode
+    chrome.tabs.onActivated.addListener(async () => {
+      if (extensionMode.data.value === 'manual') {
+        console.debug('Tab focus changed in manual mode, grouping tabs...')
+        await groupAllAppropriateTabs()
+      }
+    })
   })
   .catch(error => {
     console.error('Error during initial grouping of tabs:', error)
@@ -702,5 +771,42 @@ when(groupConfigurations.loaded)
 
 chrome.action.onClicked.addListener(async () => {
   console.debug('Trigger extension action')
-  await chrome.runtime.openOptionsPage()
+
+  const action = clickAction.data.value
+
+  if (action === 'toggle-mode') {
+    // Toggle between enabled and disabled
+    const currentMode = extensionMode.data.value
+    if (currentMode === 'disabled') {
+      extensionMode.data.value = 'enabled'
+      console.debug('Extension enabled, grouping all tabs...')
+      await groupAllAppropriateTabs()
+    } else {
+      extensionMode.data.value = 'disabled'
+      console.debug('Extension disabled')
+    }
+  } else {
+    // Default behavior: open popup
+    // Since we can't programmatically open the popup, we'll open it as a small window
+    const popupUrl = chrome.runtime.getURL('index.html?context=popup')
+
+    // Try to find an existing popup window
+    const windows = await chrome.windows.getAll({ windowTypes: ['popup'] })
+    const existingPopup = windows.find(w => {
+      return w.type === 'popup' && w.tabs?.some(t => t.url?.includes('context=popup'))
+    })
+
+    if (existingPopup) {
+      // Focus existing popup
+      await chrome.windows.update(existingPopup.id!, { focused: true })
+    } else {
+      // Create new popup window
+      await chrome.windows.create({
+        url: popupUrl,
+        type: 'popup',
+        width: 650,
+        height: 600,
+      })
+    }
+  }
 })

@@ -334,5 +334,61 @@
   "popupAddCurrentGroup": {
     "message": "Konfiguration erstellen für",
     "description": "Add tab group configuration button from a popup"
+  },
+  "settingsExtensionModeTitle": {
+    "message": "Erweiterungsverhalten",
+    "description": "Title of the extension mode setting section"
+  },
+  "settingsExtensionModeSubtitle": {
+    "message": "Konfigurieren Sie, wie die Erweiterung Tabs gruppiert",
+    "description": "Subtitle of the extension mode setting section"
+  },
+  "settingsClickActionTitle": {
+    "message": "Aktion bei Klick auf das Erweiterungs-Symbol",
+    "description": "Title of the click action setting section"
+  },
+  "settingsClickActionSubtitle": {
+    "message": "Wählen Sie, was passiert, wenn Sie auf das Erweiterungs-Symbol klicken",
+    "description": "Subtitle of the click action setting section"
+  },
+  "extensionModeEnabled": {
+    "message": "Vollständig aktiviert",
+    "description": "Extension mode: fully enabled, always auto-group"
+  },
+  "extensionModeEnabledDescription": {
+    "message": "Tabs automatisch nach konfigurierten Regeln gruppieren",
+    "description": "Description of fully enabled mode"
+  },
+  "extensionModeManual": {
+    "message": "Manuell/Leerlauf",
+    "description": "Extension mode: only group on idle or focus change"
+  },
+  "extensionModeManualDescription": {
+    "message": "Tabs nur im Leerlauf oder beim Fokuswechsel gruppieren",
+    "description": "Description of manual/idle mode"
+  },
+  "extensionModeDisabled": {
+    "message": "Deaktiviert",
+    "description": "Extension mode: temporarily disabled"
+  },
+  "extensionModeDisabledDescription": {
+    "message": "Automatisches Gruppieren vorübergehend deaktivieren",
+    "description": "Description of disabled mode"
+  },
+  "clickActionOpenPopup": {
+    "message": "Popup öffnen",
+    "description": "Click action: open the popup"
+  },
+  "clickActionOpenPopupDescription": {
+    "message": "Das Mini-Konfigurations-Popup anzeigen",
+    "description": "Description of open popup action"
+  },
+  "clickActionToggleMode": {
+    "message": "Ein/Aus umschalten",
+    "description": "Click action: toggle between enabled and disabled"
+  },
+  "clickActionToggleModeDescription": {
+    "message": "Zwischen aktiviertem und deaktiviertem Modus umschalten",
+    "description": "Description of toggle mode action"
   }
 }
