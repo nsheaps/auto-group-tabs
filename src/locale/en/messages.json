@@ -338,5 +338,61 @@
   "popupAddCurrentGroup": {
     "message": "Create configuration for",
     "description": "Add tab group configuration button from a popup"
+  },
+  "settingsExtensionModeTitle": {
+    "message": "Extension Behavior",
+    "description": "Title of the extension mode setting section"
+  },
+  "settingsExtensionModeSubtitle": {
+    "message": "Configure how the extension groups tabs",
+    "description": "Subtitle of the extension mode setting section"
+  },
+  "settingsClickActionTitle": {
+    "message": "Extension Icon Click Action",
+    "description": "Title of the click action setting section"
+  },
+  "settingsClickActionSubtitle": {
+    "message": "Choose what happens when you click the extension icon",
+    "description": "Subtitle of the click action setting section"
+  },
+  "extensionModeEnabled": {
+    "message": "Fully Enabled",
+    "description": "Extension mode: fully enabled, always auto-group"
+  },
+  "extensionModeEnabledDescription": {
+    "message": "Automatically group tabs based on configured rules",
+    "description": "Description of fully enabled mode"
+  },
+  "extensionModeManual": {
+    "message": "Manual/Idle",
+    "description": "Extension mode: only group on idle or focus change"
+  },
+  "extensionModeManualDescription": {
+    "message": "Only group tabs when idle or switching focus",
+    "description": "Description of manual/idle mode"
+  },
+  "extensionModeDisabled": {
+    "message": "Disabled",
+    "description": "Extension mode: temporarily disabled"
+  },
+  "extensionModeDisabledDescription": {
+    "message": "Temporarily disable automatic grouping",
+    "description": "Description of disabled mode"
+  },
+  "clickActionOpenPopup": {
+    "message": "Open Popup",
+    "description": "Click action: open the popup"
+  },
+  "clickActionOpenPopupDescription": {
+    "message": "Show the mini configuration popup",
+    "description": "Description of open popup action"
+  },
+  "clickActionToggleMode": {
+    "message": "Toggle On/Off",
+    "description": "Click action: toggle between enabled and disabled"
+  },
+  "clickActionToggleModeDescription": {
+    "message": "Toggle between enabled and disabled mode",
+    "description": "Description of toggle mode action"
   }
 }
